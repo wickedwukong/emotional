@@ -2,6 +2,8 @@ import path from "path";
 import fs from "fs/promises";
 import parseFrontMatter from "front-matter";
 import invariant from "tiny-invariant";
+import { marked } from "marked";
+
 
 export type Post = {
     slug: string;
@@ -23,14 +25,16 @@ function isValidPostAttributes(
 export async function getPost(slug: string) {
     const postFilePath = path.join(postsPath, `${slug}.md`);
     const postFile = await fs.readFile(postFilePath)
-    const {attributes} = parseFrontMatter(postFile.toString())
+    const {attributes, body} = parseFrontMatter(postFile.toString())
     invariant(
         isValidPostAttributes(attributes),
         `Post ${postFilePath} is missing attributes`
     );
+    const html = marked(body);
     return {
         slug,
-        title: attributes.title
+        title: attributes.title,
+        html
     }
 
 }
