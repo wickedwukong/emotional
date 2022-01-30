@@ -20,6 +20,20 @@ function isValidPostAttributes(
     return attributes?.title;
 }
 
+export async function getPost(slug: string) {
+    const postFilePath = path.join(postsPath, `${slug}.md`);
+    const postFile = await fs.readFile(postFilePath)
+    const {attributes} = parseFrontMatter(postFile.toString())
+    invariant(
+        isValidPostAttributes(attributes),
+        `Post ${postFilePath} is missing attributes`
+    );
+    return {
+        slug,
+        title: attributes.title
+    }
+
+}
 export async function getPosts() {
     const dir = await fs.readdir(postsPath);
     return Promise.all(
