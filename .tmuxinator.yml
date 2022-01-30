@@ -1,0 +1,9 @@
+name: emotional
+
+windows:
+  - build:
+      layout: tiled
+      root: .
+      panes:
+        - npm run dev 
+        - npm run start:dev
