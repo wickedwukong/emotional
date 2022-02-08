@@ -1,5 +1,4 @@
 name: emotional
-
 windows:
   - build:
       layout: tiled

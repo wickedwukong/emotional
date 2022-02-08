@@ -1,4 +1,4 @@
-import {useActionData, Form, redirect} from "remix";
+import {useActionData, Form, redirect, useTransition} from "remix";
 import {createPost} from "~/post";
 import type {ActionFunction} from "remix";
 
@@ -13,6 +13,7 @@ type PostError = {
 export const action: ActionFunction = async ({
                                                  request
                                              }) => {
+    await new Promise(res => setTimeout(res, 3000));
     const formData = await request.formData();
 
     const title = formData.get("title");
@@ -38,6 +39,7 @@ export const action: ActionFunction = async ({
 };
 
 export default function NewPost() {
+    const transition = useTransition();
     const errors = useActionData();
 
     return (
@@ -67,7 +69,9 @@ export default function NewPost() {
                 <textarea rows={20} name="markdown" />
             </p>
             <p>
-                <button type="submit">Create Post</button>
+                <button type="submit">{transition.submission
+                    ? "Creating..."
+                    : "Create Post"}</button>
             </p>
         </Form>
     );
